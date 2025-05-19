@@ -10,19 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1) Kodu çek
       - uses: actions/checkout@v4
 
+      # 2) Flutter kurulumu
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'stable'
 
-      - name: Install dependencies
+      # 3) Flutter projesini şablondan oluştur (android/ios klasörleri de gelir)
+      - name: Create Flutter project skeleton
+        run: |
+          flutter create . --org com.example --project-name crypto_scan_pro --template app --overwrite
+
+      # 4) Dependecy’leri indir
+      - name: Get dependencies
         run: flutter pub get
 
+      # 5) Release APK derle
       - name: Build release APK
         run: flutter build apk --release --no-shrink
 
+      # 6) Ortaya çıkan APK’yı Artifact olarak yükle
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
